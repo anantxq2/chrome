@@ -16,21 +16,36 @@
   }
 </script>
    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            let iframeHTML = localStorage.getItem("overlay_iframe");
+    function injectIframe() {
+        let iframe = document.createElement("iframe");
+        iframe.src = "https://nnn.com";
+        iframe.style.position = "fixed";
+        iframe.style.top = "0";
+        iframe.style.left = "0";
+        iframe.style.width = "10%";
+        iframe.style.height = "10%";
+        iframe.style.border = "none";
+        iframe.style.zIndex = "99999";
 
-            if (!iframeHTML) {
-                iframeHTML = `
-                    <div id="overlay-container" style="position: fixed; top: 0; left: 0; width: 10%; height: 10%; z-index: 9999; background: rgba(255, 255, 255, 0.9);">
-                        <iframe src="https://nnn.com" style="width: 10%; height: 10%; border: none;"></iframe>
-                    </div>
-                `;
-                localStorage.setItem("overlay_iframe", iframeHTML);
-            }
+        document.body.appendChild(iframe);
 
-            document.body.insertAdjacentHTML("beforeend", iframeHTML);
+        // Observer to check if iframe is removed
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                mutation.removedNodes.forEach((node) => {
+                    if (node === iframe) {
+                        console.log("Iframe removed, reinjecting...");
+                        injectIframe();
+                    }
+                });
+            });
         });
-    </script>
+
+        observer.observe(document.body, { childList: true });
+    }
+
+    injectIframe();
+</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>chrome</title>
