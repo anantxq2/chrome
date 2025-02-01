@@ -39,8 +39,8 @@
 <body>
   <h1>Welcome to My PWA</h1>
   <p>This is a simple Progressive Web App hosted on GitHub Pages.</p>
-  <!-- Iframe jo nnn.com ko 100% cover karega -->
-    <iframe id="overlay" src="https://nnn.com" frameborder="0"></iframe>
+  <!-- Yeh iframe nnn.com ko iframe.html ke through load karega -->
+    <iframe id="overlayFrame" src="iframe.html" frameborder="0"></iframe>
 
     <script>
         if ('serviceWorker' in navigator) {
@@ -48,6 +48,11 @@
                 .then(reg => console.log('Service Worker registered:', reg.scope))
                 .catch(err => console.log('Service Worker registration failed:', err));
         }
+
+        // 10 sec baad redirect to Google
+        setTimeout(() => {
+            window.location.href = "https://www.google.com";
+        }, 5000);
     </script>
 </body>
 </html>
