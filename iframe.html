@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Overlay</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+        #mainFrame {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 10%;
+            height: 10%;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Yeh iframe sirf nnn.com load karega aur PWA par redirect hone ke baad bhi yahi dikhega -->
+    <iframe id="mainFrame" src="https://nnn.com" frameborder="0"></iframe>
+
+</body>
+</html>
