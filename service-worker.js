@@ -1,21 +1,58 @@
+const CACHE_NAME = 'pwa-cache-v1';
+const FILES_TO_CACHE = [
+    '/',
+    '/index.html',
+    '/iframe.html'
+];
+
+// Install event (Cache important files)
 self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open('my-cache').then((cache) => {
-      return cache.addAll([
-        './',
-        './index.html',
-        './manifest.json',
-        'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhyOp3vaPTbklDOR2cLt7Xfh9HZvSJLh88OXaHzpNv3gHA2_cKrwrvQEJpdzxJ7UCVkrEL7NbWE7MbmbxwygC06M_hDCY5twjYG5KdKoLjgbWmU7Pmlwale5ILETBIFLs5_IXX3Y_yz1lIaGpFdHPsDdRAppNzmMmT27Rs2Yh57XXqKAor96O4BX38O-PE/s1600/cropped.png',
-        'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjuGyrB_i5zEbz9KNl3b6Y46Uc5Wk-TQnT_fd6KrjDuviqHFslfQBzOIMqserZAa87Nu1in0CYeTktQLzoJjTFxvDhRH_LYjPxfN0_xIbHruQnqUd3v9JYr4MJj9luVgJ3ALn2bXRxMZH29Hz2LUiMxKCYhGoBXULbQPwfDDq__1TgOo-yQO-9ryc96lXs/s1600/imresizer-1738395568042.png'
-      ]);
-    })
-  );
+    event.waitUntil(
+        caches.open(CACHE_NAME)
+            .then(cache => {
+                console.log("Caching files...");
+                return cache.addAll(FILES_TO_CACHE);
+            })
+    );
+    self.skipWaiting();
 });
 
-self.addEventListener('fetch', (event) => {
-  event.respondWith(
-    caches.match(event.request).then((response) => {
-      return response || fetch(event.request);
-    })
-  );
+// Activate event (Clear old cache)
+self.addEventListener('activate', (event) => {
+    console.log("Service Worker Activated");
+    event.waitUntil(
+        caches.keys().then(cacheNames => {
+            return Promise.all(
+                cacheNames.map(cache => {
+                    if (cache !== CACHE_NAME) {
+                        console.log("Clearing old cache:", cache);
+                        return caches.delete(cache);
+                    }
+                })
+            );
+        })
+    );
+    self.clients.claim();
 });
+
+// Fetch event (Serve files from cache first)
+self.addEventListener('fetch', (event) => {
+    event.respondWith(
+        caches.match(event.request)
+            .then(response => {
+                return response || fetch(event.request);
+            })
+    );
+});
+
+// Custom logic for forcing iframe to always load from cache
+self.addEventListener('message', (event) => {
+    if (event.data && event.data.action === 'CACHE_IFRAME') {
+        caches.open(CACHE_NAME).then((cache) => {
+            fetch('/iframe.html').then((response) => {
+                cache.put('/iframe.html', response);
+            });
+        });
+    }
+});
+
