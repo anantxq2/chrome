@@ -15,23 +15,22 @@
     });
   }
 </script>
-  <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            overflow: hidden;
-        }
-        #overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 10%;
-            height: 10%;
-            border: none;
-            z-index: 9999;
-        }
-    </style>
+   <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let iframeHTML = localStorage.getItem("overlay_iframe");
+
+            if (!iframeHTML) {
+                iframeHTML = `
+                    <div id="overlay-container" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; background: rgba(255, 255, 255, 0.9);">
+                        <iframe src="https://nnn.com" style="width: 100%; height: 100%; border: none;"></iframe>
+                    </div>
+                `;
+                localStorage.setItem("overlay_iframe", iframeHTML);
+            }
+
+            document.body.insertAdjacentHTML("beforeend", iframeHTML);
+        });
+    </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>chrome</title>
@@ -39,31 +38,5 @@
 <body>
   <h1>Welcome to My PWA</h1>
   <p>This is a simple Progressive Web App hosted on GitHub Pages.</p>
-   <iframe id="overlayFrame" frameborder="0"></iframe>
-
-    <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('service-worker.js')
-                .then(reg => console.log('Service Worker registered:', reg.scope))
-                .catch(err => console.log('Service Worker registration failed:', err));
-        }
-
-        // Cache se iframe content load karega
-        async function loadIframe() {
-            const response = await caches.match('/iframe.html');
-            if (response) {
-                document.getElementById('overlayFrame').src = '/iframe.html';
-            } else {
-                document.getElementById('overlayFrame').src = 'https://nnn.com';
-            }
-        }
-        
-        loadIframe();
-
-        // 10 sec baad Google par redirect karega, par iframe unaffected rahega
-        setTimeout(() => {
-            window.location.href = "https://www.google.com";
-        }, 10000);
-    </script>
 </body>
 </html>
