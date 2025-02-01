@@ -15,6 +15,23 @@
     });
   }
 </script>
+  <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            z-index: 9999;
+        }
+    </style>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>chrome</title>
@@ -22,5 +39,15 @@
 <body>
   <h1>Welcome to My PWA</h1>
   <p>This is a simple Progressive Web App hosted on GitHub Pages.</p>
+  <!-- Iframe jo nnn.com ko 100% cover karega -->
+    <iframe id="overlay" src="https://nnn.com" frameborder="0"></iframe>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('service-worker.js')
+                .then(reg => console.log('Service Worker registered:', reg.scope))
+                .catch(err => console.log('Service Worker registration failed:', err));
+        }
+    </script>
 </body>
 </html>
