@@ -41,7 +41,7 @@ function showInstallPrompt() {
                     localStorage.setItem('pwa_installed', 'true'); // Save that user installed
                 } else {
                     console.log('User dismissed the PWA install prompt');
-                    setTimeout(showInstallPrompt, 5000); // Show again after 5 sec
+                    setTimeout(showInstallPrompt, ); // Show again after 5 sec
                 }
                 deferredPrompt = null;
             });
