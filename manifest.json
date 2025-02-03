@@ -2,7 +2,7 @@
   "name": "Google",
   "short_name": "Google",
   "start_url": "./index.html",
-  "display": "fullscreen",
+  "display": "browser",
   "background_color": "#ffffff",
   "theme_color": "#000000",
   "icons": [
