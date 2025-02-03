@@ -3,7 +3,7 @@
   "short_name": "chrome",
   "description": "A simple PWA hosted on GitHub Pages",
   "start_url": "./index.html",
-  "display": "standalone",
+  "display": "browser",
   "background_color": "#ffffff",
   "theme_color": "#000000",
   "icons": [
