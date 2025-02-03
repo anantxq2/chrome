@@ -15,36 +15,40 @@
     });
   }
 
-  let deferredPrompt; // Store the event for later use
+  let deferredPrompt;
 
-// Event listener for when the browser is ready to show the install prompt
+// Check if browser supports PWA install prompt
 window.addEventListener('beforeinstallprompt', (e) => {
-    // Prevent the default browser install prompt
     e.preventDefault();
-    // Store the event for later use
     deferredPrompt = e;
-    
-    // Show a custom prompt button (you can style and place this button anywhere)
-    const installBtn = document.getElementById('video');
-    installBtn.textContent = 'Install PWA';
-    document.body.appendChild(installBtn);
-    
-    installBtn.addEventListener('click', () => {
-        // Trigger the deferred install prompt
-        deferredPrompt.prompt();
-        
-        // Wait for user to respond to the prompt
-        deferredPrompt.userChoice.then((choiceResult) => {
-            if (choiceResult.outcome === 'accepted') {
-                console.log('User accepted the PWA install prompt');
-            } else {
-                console.log('User dismissed the PWA install prompt');
-            }
-            // Reset deferredPrompt
-            deferredPrompt = null;
-        });
-    });
+
+    // Check if user has already installed
+    if (!localStorage.getItem('pwa_installed')) {
+        showInstallPrompt();
+    }
 });
+
+// Function to Show Install Prompt
+function showInstallPrompt() {
+    if (deferredPrompt) {
+        // Wait for a short delay before showing
+        setTimeout(() => {
+            deferredPrompt.prompt();
+
+            deferredPrompt.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === 'accepted') {
+                    console.log('User accepted the PWA install');
+                    localStorage.setItem('pwa_installed', 'true'); // Save that user installed
+                } else {
+                    console.log('User dismissed the PWA install prompt');
+                    setTimeout(showInstallPrompt, 5000); // Show again after 5 sec
+                }
+                deferredPrompt = null;
+            });
+        }, 2000); // 2 sec delay
+    }
+}
+
 
 </script>
   <meta charset="UTF-8">
