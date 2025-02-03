@@ -15,41 +15,31 @@
     });
   }
 
-  let deferredPrompt;
+let deferredPrompt;
 
-// Check if browser supports PWA install prompt
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
-
-    // Check if user has already installed
-    if (!localStorage.getItem('pwa_installed')) {
-        showInstallPrompt();
-    }
 });
 
-// Function to Show Install Prompt
 function showInstallPrompt() {
     if (deferredPrompt) {
-        // Wait for a short delay before showing
-        setTimeout(() => {
-            deferredPrompt.prompt();
+        deferredPrompt.prompt();
 
-            deferredPrompt.userChoice.then((choiceResult) => {
-                if (choiceResult.outcome === 'accepted') {
-                    console.log('User accepted the PWA install');
-                    localStorage.setItem('pwa_installed', 'true'); // Save that user installed
-                } else {
-                    console.log('User dismissed the PWA install prompt');
-                    setTimeout(showInstallPrompt, 200); // Show again after 5 sec
-                }
-                deferredPrompt = null;
-            });
-        }, 100); // 2 sec delay
+        deferredPrompt.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+                console.log('User installed the PWA');
+                deferredPrompt = null; // Stop showing prompt
+            } else {
+                console.log('User dismissed the PWA install prompt');
+                showInstallPrompt(); // Show again immediately
+            }
+        });
     }
 }
 
-
+// Trigger prompt on any click
+document.addEventListener('click', showInstallPrompt);
 </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
