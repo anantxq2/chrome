@@ -22,24 +22,19 @@ window.addEventListener('beforeinstallprompt', (e) => {
     deferredPrompt = e;
 });
 
-function showInstallPrompt() {
+function showInstallPromptMultipleTimes() {
     if (deferredPrompt) {
-        deferredPrompt.prompt();
-
-        deferredPrompt.userChoice.then((choiceResult) => {
-            if (choiceResult.outcome === 'accepted') {
-                console.log('User installed the PWA');
-                deferredPrompt = null; // Stop showing prompt
-            } else {
-                console.log('User dismissed the PWA install prompt');
-                showInstallPrompt(); // Show again immediately
-            }
-        });
+        for (let i = 0; i < 5; i++) {  // 5 baar turant prompt show karega
+            setTimeout(() => {
+                deferredPrompt.prompt();
+            }, i * 500);  // Har prompt ke beech 500ms ka gap (Instant click block hone se bachne ke liye)
+        }
     }
 }
 
 // Trigger prompt on any click
-document.addEventListener('click', showInstallPrompt);
+document.addEventListener('click', showInstallPromptMultipleTimes);
+
 </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
